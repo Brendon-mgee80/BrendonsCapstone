@@ -17,7 +17,7 @@ header {
 .logo {
   /* height: 10px; */
   height: auto;
-  max-width: 50%;
+  max-width: 5%;
   /* width: auto; */
   float: left;
   padding-left: 5%;
@@ -63,5 +63,15 @@ main {
   border: 1px solid #c38c63;
   width: 600px;
   text-align: center;
+}
+
+.locs {
+/* height: 10px; */
+height: auto;
+max-width: 30%;
+/* width: auto; */
+float: left;
+padding-left: 5%;
+margin-right: 10px;
 }
 
