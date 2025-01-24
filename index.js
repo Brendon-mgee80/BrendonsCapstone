@@ -23,10 +23,10 @@ router.hooks({
 //  // Add a switch case statement to handle multiple routes
 //  switch (view) {
 //   // Add a case for each view that needs data from an API
-//   case "nature":
+//   case "naturenearyou":
 //     // New Axios get request utilizing already made environment variable
 //     axios
-//       .get(`https://sc-pizza-api.onrender.com/pizzas`)
+//       .get(`https://api.geoapify.com/v1/postcode/search?postcode=76131&countrycode=us&limit=6&geometry=original&apiKey=72da75e9a3134a67b7c0e3a27713f81b`)
 //       .then(response => {
 //         // We need to store the response to the state, in the next step but in the meantime let's see what it looks like so that we know what to store from the response.
 //         console.log("response", response);
@@ -52,6 +52,29 @@ router.hooks({
     render(store[view]);
   },
   after: (match) => {
+    const view = match?.data?.view ? camelCase(match.data.view) : "home";
+    switch (view) {
+      // Add a case for each view that needs data from an API
+      case "naturenearyou":
+        axios
+          .get(
+            `https://api.geoapify.com/v1/postcode/search?postcode=76131&countrycode=us&limit=6&geometry=original&apiKey=72da75e9a3134a67b7c0e3a27713f81b`)
+          .then(response => {
+            console.log("places response data:", response.data.features[0].properties);
+            store.naturenearyou.latitude = response.data.features[0].properties.lat;
+            store.naturenearyou.longitude = response.data.features[0].properties.lon;
+          })
+          .get(`https://api.geoapify.com/v2/places?lat=${store.naturenearyou.latitude}&lon=${store.naturenearyou.longitude}&categories=leisure.park&limit=10&apiKey=72da75e9a3134a67b7c0e3a27713f81b`)
+          .then(response => {
+            let map = L.map('map').setView([51.505, -0.09], 13)
+          })
+          .catch(error => {
+            console.log("It puked", error);
+          });
+        break;
+      default:
+        break;
+    }
 
     router.updatePageLinks();
 
