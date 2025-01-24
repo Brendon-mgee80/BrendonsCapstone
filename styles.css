@@ -107,6 +107,6 @@ margin-right: 10px;
   height: 100%;
 }
 
-.map #map {
-  height: 180px;
+ #map {
+  height: 600px;
 }
