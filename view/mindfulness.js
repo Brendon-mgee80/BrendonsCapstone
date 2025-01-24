@@ -4,6 +4,15 @@ export default () => html`
   <h2>What is Mindfulness<h2>
   <p>Mindfulness is the practice of being fully present and engaged in the current moment, with an attitude of openness and curiosity. It involves paying attention to thoughts, feelings, and sensations without judgment or distraction. Often cultivated through meditation or daily practices, mindfulness helps create a deeper connection to oneself and the surrounding world. Its purpose is to foster awareness, reduce stress, and enhance overall well-being.</p>
   </div>
+  <div class="mindful-view">
+  <iframe
+    src="https://www.youtube.com/embed/opWQ0w_WR8E?autoplay=1&loop=1&playlist=opWQ0w_WR8E"
+    title="YouTube Video"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen>
+  </iframe>
+</div>
 
   <div>
   <h2>Benefits of Mindfulness<h2>
