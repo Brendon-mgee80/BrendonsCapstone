@@ -1,5 +1,5 @@
 import html from "html-literal";
-export default () => html`
+export default state => html`
   <body>
     <div class="container">
       <h2>Feedback Form</h2>
@@ -33,7 +33,15 @@ export default () => html`
 
     <div class="feedback-list">
       <h3>Recent Feedback</h3>
-      <div id="feedbackContainer"></div>
+      <div id="feedbackContainer">
+        <table>
+          ${state.feedback
+            .map(entry => {
+              return `<tr><td>${entry.name}</td><td>${entry.message}</td><td>${entry.rating}</td><td>${entry.submittedAt}</td></tr>`;
+            })
+            .join("")}
+        </table>
+      </div>
     </div>
   </body>
 `;
