@@ -46,13 +46,12 @@ const cors = (request, response, next) => {
 app.use(cors);
 app.use(express.json());
 app.use(logging);
+app.use("/feedback", feedback);
 
 // Handle the request with HTTP GET method from http://localhost:4040/status
 app.get("/status", (request, response) => {
   response.status(200).json({ message: "Service healthy" });
 });
-
-app.use("/feedback", feedback);
 
 // Tell the Express app to start listening
 // Let the humans know I am running and listening on 4040

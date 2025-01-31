@@ -4,6 +4,7 @@ import Navigo from "navigo";
 import { camelCase } from "lodash";
 import axios from "axios";
 
+
 const router = new Navigo("/");
 
 function render(state = store.home) {
@@ -102,7 +103,103 @@ router.hooks({
             console.log("It puked", error);
           });
         break;
-      default:
+
+      case "contact":
+
+      document
+        .getElementById("feedbackForm")
+        .addEventListener("submit", function(event) {
+          event.preventDefault();
+
+          let feedbackData;
+
+          // Get form values
+          let name = document.getElementById("name").value.trim();
+          let email = document.getElementById("email").value.trim();
+          let message = document.getElementById("message").value.trim();
+          let rating = document.getElementById("rating").value;
+          let submittedAt = new Date().toISOString(); // Auto-set timestamp
+
+          // Validation regex
+          let nameRegex = /^[A-Za-z ]*$/;
+          let emailRegex = /^[^s@]+@[^s@]+.[^s@]+$/;
+
+          // Error elements
+          let nameError = document.getElementById("nameError");
+          let emailError = document.getElementById("emailError");
+          let messageError = document.getElementById("messageError");
+          let ratingError = document.getElementById("ratingError");
+
+          // Clear errors
+          nameError.innerText = "";
+          emailError.innerText = "";
+          messageError.innerText = "";
+          ratingError.innerText = "";
+
+          let valid = true;
+
+          // Validate name
+          if (!name) {
+            nameError.innerText = "Name is required.";
+            valid = false;
+          } else if (!nameRegex.test(name)) {
+            nameError.innerText = "Only letters and spaces are allowed.";
+            valid = false;
+          }
+
+          // Validate email
+          if (!email) {
+            emailError.innerText = "Email is required.";
+            valid = false;
+          } else if (!emailRegex.test(email)) {
+            emailError.innerText = "Invalid email format.";
+            valid = false;
+          }
+
+          // Validate message
+          if (!message) {
+            messageError.innerText = "Message is required.";
+            valid = false;
+          } else if (message.length > 1000) {
+            messageError.innerText = "Message cannot exceed 1000 characters.";
+            valid = false;
+          }
+
+          // Validate rating
+          rating = Number(rating);
+          if (!rating) {
+            ratingError.innerText = "Rating is required.";
+            valid = false;
+          } else if (rating < 1 || rating > 5) {
+            ratingError.innerText = "Rating must be between 1 and 5.";
+            valid = false;
+          }
+
+          // If all fields are valid, submit data
+          if (valid) {
+              feedbackData = {
+              name: name,
+              email: email,
+              message: message,
+              rating: rating,
+              submittedAt: submittedAt
+            };
+
+            console.log("Feedback Submitted:", feedbackData);
+            alert("Feedback submitted successfully!");
+
+            // Reset form after submission
+            document.getElementById("feedbackForm").reset();
+          }
+  axios.post(`${process.env.CONTACT_API_URL}/feedback`, feedbackData).then(response => {
+    store.contact.feedback.push(response.data);
+    router.navigate("/contact");
+  }).catch(error => {
+    console.log("It puked", error);
+  })
+        });
+
+        default:
         break;
     }
 

@@ -13,7 +13,7 @@ router.post("/", async (request, response) => {
     const data = await newFeedback.save();
 
     // Respond with the saved data
-    response.status(201).json(data);
+    response.json(data);
   } catch (error) {
     // Output error to the console in case it fails to send in response
     console.error(error);
