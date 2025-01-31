@@ -1,5 +1,5 @@
 import html from "html-literal";
-export default () => html`
+export default state => html`
   <body>
     <div class="container">
       <h2>Feedback Form</h2>
@@ -33,94 +33,15 @@ export default () => html`
 
     <div class="feedback-list">
       <h3>Recent Feedback</h3>
-      <div id="feedbackContainer"></div>
+      <div id="feedbackContainer">
+        <table>
+          ${state.feedback
+            .map(entry => {
+              return `<tr><td>${entry.name}</td><td>${entry.message}</td><td>${entry.rating}</td><td>${entry.submittedAt}</td></tr>`;
+            })
+            .join("")}
+        </table>
+      </div>
     </div>
-
-    <script>
-      document
-        .getElementById("feedbackForm")
-        .addEventListener("submit", function(event) {
-          event.preventDefault();
-
-          // Get form values
-          let name = document.getElementById("name").value.trim();
-          let email = document.getElementById("email").value.trim();
-          let message = document.getElementById("message").value.trim();
-          let rating = document.getElementById("rating").value;
-          let submittedAt = new Date().toISOString(); // Auto-set timestamp
-
-          // Validation regex
-          let nameRegex = /^[A-Za-z ]*$/;
-          let emailRegex = /^[^s@]+@[^s@]+.[^s@]+$/;
-
-          // Error elements
-          let nameError = document.getElementById("nameError");
-          let emailError = document.getElementById("emailError");
-          let messageError = document.getElementById("messageError");
-          let ratingError = document.getElementById("ratingError");
-
-          // Clear errors
-          nameError.innerText = "";
-          emailError.innerText = "";
-          messageError.innerText = "";
-          ratingError.innerText = "";
-
-          let valid = true;
-
-          // Validate name
-          if (!name) {
-            nameError.innerText = "Name is required.";
-            valid = false;
-          } else if (!nameRegex.test(name)) {
-            nameError.innerText = "Only letters and spaces are allowed.";
-            valid = false;
-          }
-
-          // Validate email
-          if (!email) {
-            emailError.innerText = "Email is required.";
-            valid = false;
-          } else if (!emailRegex.test(email)) {
-            emailError.innerText = "Invalid email format.";
-            valid = false;
-          }
-
-          // Validate message
-          if (!message) {
-            messageError.innerText = "Message is required.";
-            valid = false;
-          } else if (message.length > 1000) {
-            messageError.innerText = "Message cannot exceed 1000 characters.";
-            valid = false;
-          }
-
-          // Validate rating
-          rating = Number(rating);
-          if (!rating) {
-            ratingError.innerText = "Rating is required.";
-            valid = false;
-          } else if (rating < 1 || rating > 5) {
-            ratingError.innerText = "Rating must be between 1 and 5.";
-            valid = false;
-          }
-
-          // If all fields are valid, submit data
-          if (valid) {
-            let feedbackData = {
-              name: name,
-              email: email,
-              message: message,
-              rating: rating,
-              submittedAt: submittedAt
-            };
-
-            console.log("Feedback Submitted:", feedbackData);
-            alert("Feedback submitted successfully!");
-
-            // Reset form after submission
-            document.getElementById("feedbackForm").reset();
-          }
-        });
-    </script>
   </body>
 `;

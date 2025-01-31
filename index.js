@@ -4,6 +4,7 @@ import Navigo from "navigo";
 import { camelCase } from "lodash";
 import axios from "axios";
 
+
 const router = new Navigo("/");
 
 function render(state = store.home) {
@@ -20,31 +21,27 @@ router.hooks({
     // We need to know what view we are on to know what data to fetch
     const view = match?.data?.view ? camelCase(match.data.view) : "home";
 
-    //  // Add a switch case statement to handle multiple routes
-    //  switch (view) {
-    //   // Add a case for each view that needs data from an API
-    //   case "naturenearyou":
-    //     // New Axios get request utilizing already made environment variable
-    //     axios
-    //       .get(`https://api.geoapify.com/v1/postcode/search?postcode=76131&countrycode=us&limit=6&geometry=original&apiKey=72da75e9a3134a67b7c0e3a27713f81b`)
-    //       .then(response => {
-    //         // We need to store the response to the state, in the next step but in the meantime let's see what it looks like so that we know what to store from the response.
-    //         console.log("response", response);
-    //         done();
-    //       })
-    //       .catch((error) => {
-    //         console.log("It puked", error);
-    //         done();
-    //       });
-    //       break;
-    //   default :
-    //     // We must call done for all views so we include default for the views that don't have cases above.
-    //     done();
-    //     // break is not needed since it is the last condition, if you move default higher in the stack then you should add the break statement.
-    // }
-    // },
+    switch (view) {
+      case "contact":
 
-    done();
+      axios
+      .get(`${process.env.CONTACT_API_URL}/feedback`)
+      .then(response => {
+        // We need to store the response to the state, in the next step but in the meantime let's see what it looks like so that we know what to store from the response.
+
+        store.contact.feedback = response.data;
+        console.log("response", store.contact.feedback);
+        done();
+      })
+      .catch((error) => {
+        console.log("It puked", error);
+        done();
+      });
+      break;
+      default: done();
+    }
+
+
   },
   already: (match) => {
     const view = match?.data?.view ? camelCase(match.data.view) : "home";
@@ -102,7 +99,103 @@ router.hooks({
             console.log("It puked", error);
           });
         break;
-      default:
+
+      case "contact":
+
+      document
+        .getElementById("feedbackForm")
+        .addEventListener("submit", function(event) {
+          event.preventDefault();
+
+          let feedbackData;
+
+          // Get form values
+          let name = document.getElementById("name").value.trim();
+          let email = document.getElementById("email").value.trim();
+          let message = document.getElementById("message").value.trim();
+          let rating = document.getElementById("rating").value;
+          let submittedAt = new Date().toISOString(); // Auto-set timestamp
+
+          // Validation regex
+          let nameRegex = /^[A-Za-z ]*$/;
+          let emailRegex = /^[^s@]+@[^s@]+.[^s@]+$/;
+
+          // Error elements
+          let nameError = document.getElementById("nameError");
+          let emailError = document.getElementById("emailError");
+          let messageError = document.getElementById("messageError");
+          let ratingError = document.getElementById("ratingError");
+
+          // Clear errors
+          nameError.innerText = "";
+          emailError.innerText = "";
+          messageError.innerText = "";
+          ratingError.innerText = "";
+
+          let valid = true;
+
+          // Validate name
+          if (!name) {
+            nameError.innerText = "Name is required.";
+            valid = false;
+          } else if (!nameRegex.test(name)) {
+            nameError.innerText = "Only letters and spaces are allowed.";
+            valid = false;
+          }
+
+          // Validate email
+          if (!email) {
+            emailError.innerText = "Email is required.";
+            valid = false;
+          } else if (!emailRegex.test(email)) {
+            emailError.innerText = "Invalid email format.";
+            valid = false;
+          }
+
+          // Validate message
+          if (!message) {
+            messageError.innerText = "Message is required.";
+            valid = false;
+          } else if (message.length > 1000) {
+            messageError.innerText = "Message cannot exceed 1000 characters.";
+            valid = false;
+          }
+
+          // Validate rating
+          rating = Number(rating);
+          if (!rating) {
+            ratingError.innerText = "Rating is required.";
+            valid = false;
+          } else if (rating < 1 || rating > 5) {
+            ratingError.innerText = "Rating must be between 1 and 5.";
+            valid = false;
+          }
+
+          // If all fields are valid, submit data
+          if (valid) {
+              feedbackData = {
+              name: name,
+              email: email,
+              message: message,
+              rating: rating,
+              submittedAt: submittedAt
+            };
+
+            console.log("Feedback Submitted:", feedbackData);
+            alert("Feedback submitted successfully!");
+
+            // Reset form after submission
+            document.getElementById("feedbackForm").reset();
+          }
+  axios.post(`${process.env.CONTACT_API_URL}/feedback`, feedbackData).then(response => {
+    store.contact.feedback.push(response.data);
+    router.navigate("/contact");
+  }).catch(error => {
+    console.log("It puked", error);
+  })
+        });
+
+        default:
         break;
     }
 
