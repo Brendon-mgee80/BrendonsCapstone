@@ -2,6 +2,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import feedback from "./routers/feedback.js";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -46,16 +47,12 @@ app.use(cors);
 app.use(express.json());
 app.use(logging);
 
-/*
-  express supports chaining `use()` statements,
-  so the above 2 statements could look like this as well
-  app.use(express.json()).use(logging)
-*/
-
 // Handle the request with HTTP GET method from http://localhost:4040/status
 app.get("/status", (request, response) => {
   response.status(200).json({ message: "Service healthy" });
 });
+
+app.use("/feedback", feedback);
 
 // Tell the Express app to start listening
 // Let the humans know I am running and listening on 4040

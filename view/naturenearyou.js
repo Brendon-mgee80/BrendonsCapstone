@@ -1,6 +1,6 @@
 import html from "html-literal";
 export default () => html`
-  <p>Search API for looking up parks and green spaces by city, state.</p>
+  <p>Search for nature parks and green spaces in your area!</p>
   <div id="map"></div>
 
   <div class="search-container">
