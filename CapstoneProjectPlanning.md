@@ -53,7 +53,7 @@
 
 - Create wireframes and provide link for each page (minimum of 4-5 pages) including Home, About Me, Contact Us and 1-2 other pages demonstrating the specific functionality of your capstone's purpose.
 [Wireframes]
-![Holistic Corner Homepage]Docs/(Homepage.jpg)
+![Holistic Corner Homepage](Docs/Homepage.jpg)
 ![Mindfulness Corner](Docs/IMG_9728.jpg)
 ![Meditation](Docs/IMG_9729.jpg)
 ![Nature Near You](Docs/IMG_9730.jpg)

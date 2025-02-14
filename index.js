@@ -55,7 +55,7 @@ router.hooks({
       case "naturenearyou":
         await axios
           .get(
-            `https://api.geoapify.com/v1/postcode/search?postcode=76131&countrycode=us&limit=6&geometry=original&apiKey=${process.env.GEOAPIFY_API}`)
+            `https://api.geoapify.com/v1/postcode/search?postcode=75052&countrycode=us&limit=6&geometry=original&apiKey=${process.env.GEOAPIFY_API}`)
           .then(response => {
             console.log("places response data:", response.data.features[0].properties);
             store.naturenearyou.latitude = response.data.features[0].properties.lat;
@@ -181,8 +181,7 @@ router.hooks({
               submittedAt: submittedAt
             };
 
-            console.log("Feedback Submitted:", feedbackData);
-            alert("Feedback submitted successfully!");
+
 
             // Reset form after submission
             document.getElementById("feedbackForm").reset();
@@ -190,6 +189,8 @@ router.hooks({
   axios.post(`${process.env.CONTACT_API_URL}/feedback`, feedbackData).then(response => {
     store.contact.feedback.push(response.data);
     router.navigate("/contact");
+    console.log("Feedback Submitted:", feedbackData);
+            alert("Feedback submitted successfully!");
   }).catch(error => {
     console.log("It puked", error);
   })
